@@ -1,6 +1,7 @@
-package reisetech.StudentManagement;
+package reisetech.studentmanagement;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,11 +11,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class StudentManagementApplication {
 
+		@Autowired
+		private StudentRepository studentRepository;
+		@Autowired
+	  private StudentsCoursesRepository studentsCoursesRepository;
+
 	public static void main(String[] args) {
 		SpringApplication.run(StudentManagementApplication.class, args);
 	}
-	@GetMapping("/hello")
-	public String hello(){
-		return "Hello,World";
+
+	@GetMapping("/studentList")
+	public List<Student> getStudentList() {
+		return studentRepository.search();
+	}
+
+	@GetMapping("/studentsCourses")
+	public List<StudentsCourses> getStudentCoursesList(){
+		return studentsCoursesRepository.search();
 	}
 }
