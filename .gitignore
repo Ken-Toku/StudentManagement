@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# Sensitive settings(これらのファイルを意図せずリポジトリにコミットされるのを防ぐ)
+application.properties
+application.yml
