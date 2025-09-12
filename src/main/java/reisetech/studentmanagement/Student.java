@@ -1,4 +1,4 @@
-package reisetech.StudentManagement;
+package reisetech.studentmanagement;
 
 import lombok.Getter;
 import lombok.Setter;

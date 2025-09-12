@@ -1,15 +1,10 @@
-package reisetech.StudentManagement;
+package reisetech.studentmanagement;
 
 import java.util.List;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
@@ -26,7 +21,7 @@ public class StudentManagementApplication {
 	}
 
 	@GetMapping("/studentList")
-	public List<Student> getstudentList() {
+	public List<Student> getStudentList() {
 		return studentRepository.search();
 	}
 

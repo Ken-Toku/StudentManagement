@@ -1,4 +1,4 @@
-package reisetech.StudentManagement;
+package reisetech.studentmanagement;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;

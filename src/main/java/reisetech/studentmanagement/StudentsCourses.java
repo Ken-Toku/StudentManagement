@@ -1,4 +1,4 @@
-package reisetech.StudentManagement;
+package reisetech.studentmanagement;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
