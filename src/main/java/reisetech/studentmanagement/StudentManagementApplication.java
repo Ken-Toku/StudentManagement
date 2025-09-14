@@ -14,7 +14,7 @@ public class StudentManagementApplication {
 		@Autowired
 		private StudentRepository studentRepository;
 		@Autowired
-	  private StudentsCoursesRepository studentsCoursesRepository;
+	  private StudentCourseRepository studentCourseRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(StudentManagementApplication.class, args);
@@ -26,7 +26,7 @@ public class StudentManagementApplication {
 	}
 
 	@GetMapping("/studentsCourses")
-	public List<StudentsCourses> getStudentCoursesList(){
-		return studentsCoursesRepository.search();
+	public List<StudentCourse> getStudentCourseList(){
+		return studentCourseRepository.search();
 	}
 }
