@@ -11,22 +11,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class StudentManagementApplication {
 
-		@Autowired
-		private StudentRepository studentRepository;
-		@Autowired
-	  private StudentCourseRepository studentCourseRepository;
+  @Autowired
+  private StudentRepository studentRepository;
+  @Autowired
+  private StudentCourseRepository studentCourseRepository;
 
-	public static void main(String[] args) {
-		SpringApplication.run(StudentManagementApplication.class, args);
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(StudentManagementApplication.class, args);
+  }
 
-	@GetMapping("/studentList")
-	public List<Student> getStudentList() {
-		return studentRepository.search();
-	}
+  @GetMapping("/studentList")
+  public List<Student> getStudentList() {
+    return studentRepository.search();
+  }
 
-	@GetMapping("/studentsCourses")
-	public List<StudentCourse> getStudentCourseList(){
-		return studentCourseRepository.search();
-	}
+  @GetMapping("/studentsCourses")
+  public List<StudentCourse> getStudentCourseList() {
+    return studentCourseRepository.search();
+  }
 }
