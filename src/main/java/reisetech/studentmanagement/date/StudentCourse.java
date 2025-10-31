@@ -1,4 +1,4 @@
-package reisetech.studentmanagement;
+package reisetech.studentmanagement.date;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,9 +9,10 @@ import lombok.Setter;
 @Setter
 public class StudentCourse {
 
-  private int id;
-  private int studentId;
+  private Integer id;
+  private Integer studentId;
   private String courseName;
   private LocalDateTime enrollmentDate;
   private LocalDate completionDate;
+  private String remark;
 }
