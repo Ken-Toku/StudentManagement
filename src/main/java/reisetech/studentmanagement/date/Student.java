@@ -1,4 +1,4 @@
-package reisetech.studentmanagement;
+package reisetech.studentmanagement.date;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class Student {
 
-  private int id;
+  private Integer id;
   private String name;
   private String furigana;
   private int age;
@@ -15,4 +15,7 @@ public class Student {
   private String nickname;
   private String email;
   private String city;
+  private String remark;
+  private boolean isDeleted;
+
 }
