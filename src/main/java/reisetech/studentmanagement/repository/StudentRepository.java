@@ -48,7 +48,7 @@ public interface StudentRepository {
       SELECT * 
       FROM students_courses
       """)
-  List<StudentCourse> searchStudentsCoursesList();
+  List<StudentCourse> searchStudentCourseList();
 
   /**
    * 受講生IDに紐づく受講生コース情報を検索します。
@@ -63,7 +63,11 @@ public interface StudentRepository {
       """)
   List<StudentCourse> searchStudentCourse(Integer studentId);
 
-  //　新規受講生登録
+  /**
+   * 受講生を新規登録します。 IDに関しては自動採番を行う。
+   *
+   * @param student 　受講生
+   */
   @Insert("""
       INSERT INTO students 
         (name, furigana, age, gender, nickname, email, city, remark)
@@ -73,7 +77,12 @@ public interface StudentRepository {
   @Options(useGeneratedKeys = true, keyProperty = "id")
   void registerStudent(Student student);
 
-  //　新規コース登録
+
+  /**
+   * 受講生コース情報を新規登録します。 IDに関しては自動採番を行う。
+   *
+   * @param studentCourse 　受講生コース情報
+   */
   @Insert("""
       INSERT INTO students_courses 
         (student_id, course_name, completion_date, remark)
@@ -81,9 +90,13 @@ public interface StudentRepository {
         (#{studentId}, #{courseName}, #{completionDate}, #{remark})
       """)
   @Options(useGeneratedKeys = true, keyProperty = "id")
-  void registerStudentsCourses(StudentCourse studentCourse);
+  void registerStudentCourse(StudentCourse studentCourse);
 
-  //　受講生情報更新
+  /**
+   * 受講生を更新します。
+   *
+   * @param student 　受講生
+   */
   @Update("""
       UPDATE students 
       SET 
@@ -101,13 +114,17 @@ public interface StudentRepository {
       """)
   void updateStudent(Student student);
 
-  //　コース情報更新
+  /**
+   * 受講生コース情報のコース名を更新します。
+   *
+   * @param studentCourse 　受講生コース情報情報
+   */
   @Update("""
       UPDATE students_courses 
       SET 
         course_name = #{courseName}
       WHERE 
-        id = #{id}
+        student_id = #{studentId}
       """)
-  void updateStudentsCourses(StudentCourse studentCourse);
+  void updateStudentCourse(StudentCourse studentCourse);
 }

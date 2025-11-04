@@ -16,6 +16,6 @@ import reisetech.studentmanagement.date.StudentCourse;
 public class StudentDetail {
 
   private Student student;
-  private List<StudentCourse> studentCourses = new ArrayList<>();
+  private List<StudentCourse> studentCourseList = new ArrayList<>();
 
 }
