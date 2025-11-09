@@ -65,13 +65,13 @@
     id = #{id}
   </update>
 
-  <!-- 受講生コース情報のコース名を更新 -->
+  <!-- 受講生コース情報 1件分（idで特定）のコース名を更新 -->
   <update id="updateStudentCourse" parameterType="StudentCourse">
     UPDATE students_courses
     SET
     course_name = #{courseName}
     WHERE
-    student_id = #{studentId}
+    id = #{id}
   </update>
 
 </mapper>

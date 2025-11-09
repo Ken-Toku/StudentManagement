@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 例外ハンドリングの動作確認用コントローラー.
  */
 @RestController
-public class DebugContriller {
+public class DebugController {
 
   /**
    * 共通エラー処理の動作確認用。 このURLにアクセスすると、あえて例外を発生させます。

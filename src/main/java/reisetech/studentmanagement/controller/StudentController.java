@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Min;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +21,7 @@ import reisetech.studentmanagement.service.StudentService;
  */
 
 @RestController
+@Validated
 public class StudentController {
 
   private StudentService service;
@@ -49,10 +50,7 @@ public class StudentController {
    */
   @GetMapping("/student/{id}")
   public StudentDetail getStudent(
-      @PathVariable
-      @Min(value = 1, message = "IDは1以上の数値を指定してください")
-      @Max(value = 999, message = "IDは3桁までの数値を指定してください")
-      Integer id) {
+      @PathVariable @Min(value = 1, message = "IDは1以上の数値を指定してください") @Max(value = 999, message = "IDは3桁までの数値を指定してください") Integer id) {
     return service.searchStudent(id);
   }
 
@@ -63,12 +61,8 @@ public class StudentController {
    * @return　実行結果
    */
   @PostMapping("/registerStudent")
-  public ResponseEntity<?> registerStudent(
-      @RequestBody @Valid StudentDetail studentDetail,
-      BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
-    }
+  public ResponseEntity<?> registerStudent(@RequestBody @Valid StudentDetail studentDetail) {
+
     StudentDetail responseStudentDetail = service.registerStudent(studentDetail);
     return ResponseEntity.ok(responseStudentDetail);
   }
@@ -80,12 +74,7 @@ public class StudentController {
    * @return　実行結果
    */
   @PutMapping("/updateStudent")
-  public ResponseEntity<?> updateStudent(
-      @RequestBody @Valid StudentDetail studentDetail,
-      BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
-    }
+  public ResponseEntity<?> updateStudent(@RequestBody @Valid StudentDetail studentDetail) {
 
     service.updateStudent(studentDetail);
     return ResponseEntity.ok("更新処理が成功しました。");
