@@ -78,7 +78,7 @@ public class StudentService {
    * @param studentCourse 　受講生コース情報
    * @param student       　受講生
    */
-  private static void initStudentCourse(StudentCourse studentCourse, Student student) {
+  static void initStudentCourse(StudentCourse studentCourse, Student student) {
     studentCourse.setStudentId(student.getId());
     studentCourse.setCompletionDate(LocalDate.now().plusYears(1));
   }
