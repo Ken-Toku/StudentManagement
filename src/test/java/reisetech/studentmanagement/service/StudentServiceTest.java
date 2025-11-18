@@ -2,6 +2,11 @@ package reisetech.studentmanagement.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -38,20 +43,63 @@ public class StudentServiceTest {
 
 
   @Test
-  void 登録済みの受講生情報を全件取得_リポジトリとコンバーターの処理が適切に呼び出されていること() {
+  void 登録済みの受講生情報を全件取得_リポジトリとコンバーターの処理が適切に呼び出されていることおよび戻り値の中身の検証() {
+
     List<Student> studentList = new ArrayList<>();
+    Student student = new Student();
+    student.setId(1);
+    student.setName("山田太郎");
+    studentList.add(student);
+
     List<StudentCourse> studentCourseList = new ArrayList<>();
+    StudentCourse studentCourse = new StudentCourse();
+    studentCourse.setStudentId(1);
+    studentCourse.setCourseName("Java");
+    studentCourseList.add(studentCourse);
+
+    List<StudentDetail> studentDetailList = new ArrayList<>();
+    StudentDetail studentDetail = new StudentDetail(student, studentCourseList);
+    studentDetailList.add(studentDetail);
 
     Mockito.when(repository.search()).thenReturn(studentList);
     Mockito.when(repository.searchStudentCourseList()).thenReturn(studentCourseList);
+    Mockito.when((converter.convertStudentDetails(studentList, studentCourseList)))
+        .thenReturn(studentDetailList);
 
     List<StudentDetail> actual = sut.searchStudentList();
 
     verify(repository, times(1)).search();
     verify(repository, times(1)).searchStudentCourseList();
     verify(converter, times(1)).convertStudentDetails(studentList, studentCourseList);
+
+    assertEquals(1, actual.size());
+    assertSame(studentDetail, actual.get(0));
+    assertSame(student, actual.get(0).getStudent());
+    assertEquals(1, actual.get(0).getStudentCourseList().size());
+    assertSame(studentCourse, actual.get(0).getStudentCourseList().get(0));
   }
 
+  @Test
+  void 登録済みの受講生情報を全件取得_リポジトリが例外を投げた場合その例外が呼び出し元に伝達されること() {
+    Mockito.when(repository.search()).thenThrow(new RuntimeException("DB error"));
+
+    assertThrows(RuntimeException.class, () -> sut.searchStudentList());
+
+    verify(repository, never()).searchStudentCourseList();
+    verify(converter, never()).convertStudentDetails(anyList(), anyList());
+
+  }
+
+  @Test
+  void 受講生IDに紐づく受講生情報を取得＿存在しないIDの場合はNullPointerExceptionが発生すること() {
+    Integer notId = 999;
+
+    Mockito.when(repository.searchStudent(notId)).thenReturn(null);
+
+    assertThrows(NullPointerException.class, () -> sut.searchStudent(notId));
+
+    verify(repository, never()).searchStudentCourse(anyInt());
+  }
 
   @Test
   void 受講生IDを指定して検索_受講生とコース情報をまとめてStudentDetailとして取得できること() {
@@ -102,6 +150,31 @@ public class StudentServiceTest {
 
     assertSame(studentDetail, actual);
   }
+
+  @Test
+  void 受講生と受講生コース情報の登録＿受講生情報登録処理実施時に例外が発生した場合コース登録処理が実施されないこと() {
+    Integer id = 1;
+
+    Student student = new Student();
+    student.setId(1);
+
+    StudentCourse studentCourse1 = new StudentCourse();
+    StudentCourse studentCourse2 = new StudentCourse();
+
+    List<StudentCourse> studentCourseList = new ArrayList<>();
+    studentCourseList.add(studentCourse1);
+    studentCourseList.add(studentCourse2);
+
+    StudentDetail studentDetail = new StudentDetail(student, studentCourseList);
+
+    Mockito.doThrow(new RuntimeException("DB error")).when(repository).registerStudent(student);
+
+    assertThrows(RuntimeException.class,() -> sut.registerStudent(studentDetail));
+
+    verify(repository,never()).registerStudentCourse(any(StudentCourse.class));
+
+  }
+
 
   @Test
   void 受講生コース情報初期化_受講生IDと修了予定日が正しく設定されること() {
