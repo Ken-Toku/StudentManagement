@@ -21,9 +21,9 @@ public class StudentConverter {
    * @param studentCourseList 　受講生コース情報
    * @return　受講生詳細情報のリスト
    */
-  public List<StudentDetail> convertStudentDetails(List<Student> studentList,
+  public List<StudentDetail> convertStudentDetailList(List<Student> studentList,
       List<StudentCourse> studentCourseList) {
-    List<StudentDetail> studentDetails = new ArrayList<>();
+    List<StudentDetail> studentDetailList = new ArrayList<>();
     studentList.forEach(student -> {
       StudentDetail studentDetail = new StudentDetail();
       studentDetail.setStudent(student);
@@ -33,9 +33,9 @@ public class StudentConverter {
           .collect(Collectors.toList());
 
       studentDetail.setStudentCourseList(convertStudentCourseList);
-      studentDetails.add(studentDetail);
+      studentDetailList.add(studentDetail);
     });
-    return studentDetails;
+    return studentDetailList;
   }
 
 }

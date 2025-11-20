@@ -38,7 +38,7 @@ public class StudentService {
   public List<StudentDetail> searchStudentList() {
     List<Student> studentList = repository.search();
     List<StudentCourse> studentCourseList = repository.searchStudentCourseList();
-    return converter.convertStudentDetails(studentList, studentCourseList);
+    return converter.convertStudentDetailList(studentList, studentCourseList);
   }
 
   /**
@@ -65,7 +65,7 @@ public class StudentService {
 
     repository.registerStudent(student);
     studentDetail.getStudentCourseList().forEach(studentCourse -> {
-      initStudentCourse(studentCourse, student);
+      initStudentCourse(studentCourse, student.getId());
       repository.registerStudentCourse(studentCourse);
     });
 
@@ -76,10 +76,10 @@ public class StudentService {
    * 受講生コース情報を登録する際の初期情報を設定する。
    *
    * @param studentCourse 　受講生コース情報
-   * @param student       　受講生
+   * @param id       　受講生ID
    */
-  static void initStudentCourse(StudentCourse studentCourse, Student student) {
-    studentCourse.setStudentId(student.getId());
+  static void initStudentCourse(StudentCourse studentCourse, Integer id) {
+    studentCourse.setStudentId(id);
     studentCourse.setCompletionDate(LocalDate.now().plusYears(1));
   }
 
