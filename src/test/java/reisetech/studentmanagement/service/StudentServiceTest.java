@@ -1,5 +1,6 @@
 package reisetech.studentmanagement.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -63,20 +64,25 @@ public class StudentServiceTest {
 
     Mockito.when(repository.search()).thenReturn(studentList);
     Mockito.when(repository.searchStudentCourseList()).thenReturn(studentCourseList);
-    Mockito.when((converter.convertStudentDetails(studentList, studentCourseList)))
+    Mockito.when((converter.convertStudentDetailList(studentList, studentCourseList)))
         .thenReturn(studentDetailList);
 
     List<StudentDetail> actual = sut.searchStudentList();
 
     verify(repository, times(1)).search();
     verify(repository, times(1)).searchStudentCourseList();
-    verify(converter, times(1)).convertStudentDetails(studentList, studentCourseList);
+    verify(converter, times(1)).convertStudentDetailList(studentList, studentCourseList);
 
-    assertEquals(1, actual.size());
-    assertSame(studentDetail, actual.get(0));
-    assertSame(student, actual.get(0).getStudent());
-    assertEquals(1, actual.get(0).getStudentCourseList().size());
-    assertSame(studentCourse, actual.get(0).getStudentCourseList().get(0));
+    assertThat(actual)
+        .hasSize(1);
+    assertThat(actual.get(0))
+        .isSameAs(studentDetail);
+    assertThat(actual.get(0).getStudent())
+        .isSameAs(student);
+    assertThat(actual.get(0).getStudentCourseList())
+        .hasSize(1);
+    assertThat(actual.get(0).getStudentCourseList().get(0))
+        .isSameAs(studentCourse);
   }
 
   @Test
@@ -86,7 +92,7 @@ public class StudentServiceTest {
     assertThrows(RuntimeException.class, () -> sut.searchStudentList());
 
     verify(repository, never()).searchStudentCourseList();
-    verify(converter, never()).convertStudentDetails(anyList(), anyList());
+    verify(converter, never()).convertStudentDetailList(anyList(), anyList());
 
   }
 
@@ -121,8 +127,10 @@ public class StudentServiceTest {
     verify(repository, times(1)).searchStudent(id);
     verify(repository, times(1)).searchStudentCourse(id);
 
-    assertSame(student, actual.getStudent());
-    assertEquals(studentCourseList, actual.getStudentCourseList());
+    assertThat(actual.getStudent())
+        .isSameAs(student);
+    assertThat(actual.getStudentCourseList())
+        .isEqualTo(studentCourseList);
   }
 
 
@@ -148,7 +156,7 @@ public class StudentServiceTest {
     verify(repository, times(1)).registerStudentCourse(course1);
     verify(repository, times(1)).registerStudentCourse(course2);
 
-    assertSame(studentDetail, actual);
+    assertThat(actual).isSameAs(studentDetail);
   }
 
   @Test
@@ -184,10 +192,12 @@ public class StudentServiceTest {
     StudentCourse studentCourse = new StudentCourse();
 
     LocalDate expectedCompletionDate = LocalDate.now().plusYears(1);
-    StudentService.initStudentCourse(studentCourse, student);
+    StudentService.initStudentCourse(studentCourse, student.getId());
 
-    assertEquals(1, studentCourse.getStudentId());
-    assertEquals(expectedCompletionDate, studentCourse.getCompletionDate());
+    assertThat(studentCourse.getStudentId())
+        .isEqualTo(1);
+    assertThat(studentCourse.getCompletionDate())
+        .isEqualTo(expectedCompletionDate);
   }
 
   @Test
@@ -212,7 +222,9 @@ public class StudentServiceTest {
     verify(repository, times(1)).updateStudentCourse(course1);
     verify(repository, times(1)).updateStudentCourse(course2);
 
-    assertEquals(id, course1.getStudentId());
-    assertEquals(id, course2.getStudentId());
+    assertThat(course1.getStudentId())
+        .isEqualTo(id);
+    assertThat(course2.getStudentId())
+        .isEqualTo(id);
   }
 }
