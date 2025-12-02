@@ -9,8 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import reisetech.studentmanagement.date.Student;
-import reisetech.studentmanagement.date.StudentCourse;
+import reisetech.studentmanagement.data.Student;
+import reisetech.studentmanagement.data.StudentCourse;
 
 @Schema(description = "受講生詳細")
 @Getter

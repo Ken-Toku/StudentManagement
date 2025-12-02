@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reisetech.studentmanagement.controller.converter.StudentConverter;
-import reisetech.studentmanagement.date.Student;
-import reisetech.studentmanagement.date.StudentCourse;
+import reisetech.studentmanagement.data.Student;
+import reisetech.studentmanagement.data.StudentCourse;
 import reisetech.studentmanagement.domain.StudentDetail;
 import reisetech.studentmanagement.repository.StudentRepository;
 
@@ -33,7 +33,7 @@ public class StudentService {
   /**
    * 受講生詳細の一覧検索を行います。 全件検索を行うので、条件指定は行いません。
    *
-   * @return　受講生詳細一覧（全件）
+   * @return 受講生詳細一覧（全件）
    */
   public List<StudentDetail> searchStudentList() {
     List<Student> studentList = repository.search();
@@ -45,7 +45,7 @@ public class StudentService {
    * 受講生詳細検索です。 IDに紐づく受講生情報を取得した後、その受講生に紐づく受講生コース情報を取得して設定します。
    *
    * @param id 　受講生ID
-   * @return　受講生詳細
+   * @return 受講生詳細
    */
   public StudentDetail searchStudent(Integer id) {
     Student student = repository.searchStudent(id);
@@ -56,8 +56,8 @@ public class StudentService {
   /**
    * 受講生詳細の登録を行います。 受講生と受講生コース情報を個別に登録し、受講生コース情報には受講生情報を紐づける値とコース終了日を設定します。
    *
-   * @param　studentDetail　受講生詳細
-   * @return　登録情報を付与した受講生詳細
+   * @param studentDetail　受講生詳細
+   * @return 登録情報を付与した受講生詳細
    */
   @Transactional
   public StudentDetail registerStudent(StudentDetail studentDetail) {
