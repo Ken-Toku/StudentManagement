@@ -23,7 +23,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import reisetech.studentmanagement.date.Student;
+import reisetech.studentmanagement.data.Student;
 import reisetech.studentmanagement.domain.StudentDetail;
 import reisetech.studentmanagement.service.StudentService;
 

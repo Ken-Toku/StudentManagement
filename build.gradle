@@ -29,8 +29,10 @@ repositories {
 dependencies {
     // SpringBoot
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
     // Thymeleaf
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.5.6'
+
     //Validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
@@ -38,22 +40,30 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14'
 
     // Apache Commons Lang 便利機能、ユーティリティ
-    implementation("org.apache.commons:commons-lang3:3.18.0")
+    implementation 'org.apache.commons:commons-lang3:3.18.0'
 
     //Lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-
     // MySQLドライバ
     runtimeOnly 'com.mysql:mysql-connector-j'
 
     // MyBatis
-    implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.5")
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.5'
 
+    // APサーバー（Tomcat）
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+
+    // SpringBoot Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // MyBatis Test
+    testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.5'
+
+    // H2(InMemoryDB)
+    testImplementation 'com.h2database:h2:2.4.240'
 }
 
 tasks.named('test') {

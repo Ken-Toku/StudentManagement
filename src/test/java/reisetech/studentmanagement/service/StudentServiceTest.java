@@ -1,8 +1,6 @@
 package reisetech.studentmanagement.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -21,8 +19,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reisetech.studentmanagement.controller.converter.StudentConverter;
-import reisetech.studentmanagement.date.Student;
-import reisetech.studentmanagement.date.StudentCourse;
+import reisetech.studentmanagement.data.Student;
+import reisetech.studentmanagement.data.StudentCourse;
 import reisetech.studentmanagement.domain.StudentDetail;
 import reisetech.studentmanagement.repository.StudentRepository;
 
@@ -75,13 +73,13 @@ public class StudentServiceTest {
 
     assertThat(actual)
         .hasSize(1);
-    assertThat(actual.get(0))
+    assertThat(actual.getFirst())
         .isSameAs(studentDetail);
-    assertThat(actual.get(0).getStudent())
+    assertThat(actual.getFirst().getStudent())
         .isSameAs(student);
-    assertThat(actual.get(0).getStudentCourseList())
+    assertThat(actual.getFirst().getStudentCourseList())
         .hasSize(1);
-    assertThat(actual.get(0).getStudentCourseList().get(0))
+    assertThat(actual.getFirst().getStudentCourseList().getFirst())
         .isSameAs(studentCourse);
   }
 
@@ -161,7 +159,6 @@ public class StudentServiceTest {
 
   @Test
   void 受講生と受講生コース情報の登録＿受講生情報登録処理実施時に例外が発生した場合コース登録処理が実施されないこと() {
-    Integer id = 1;
 
     Student student = new Student();
     student.setId(1);
@@ -177,9 +174,9 @@ public class StudentServiceTest {
 
     Mockito.doThrow(new RuntimeException("DB error")).when(repository).registerStudent(student);
 
-    assertThrows(RuntimeException.class,() -> sut.registerStudent(studentDetail));
+    assertThrows(RuntimeException.class, () -> sut.registerStudent(studentDetail));
 
-    verify(repository,never()).registerStudentCourse(any(StudentCourse.class));
+    verify(repository, never()).registerStudentCourse(any(StudentCourse.class));
 
   }
 

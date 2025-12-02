@@ -2,8 +2,8 @@ package reisetech.studentmanagement.repository;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
-import reisetech.studentmanagement.date.Student;
-import reisetech.studentmanagement.date.StudentCourse;
+import reisetech.studentmanagement.data.Student;
+import reisetech.studentmanagement.data.StudentCourse;
 
 /**
  * 受講生テーブルと受講生コース情報テーブルと紐づくRepositoryです。
@@ -21,15 +21,15 @@ public interface StudentRepository {
   /**
    * 受講生の検索を行います。
    *
-   * @param id 　受講生ID
-   * @return　受講生
+   * @param id 受講生ID
+   * @return 受講生
    */
   Student searchStudent(Integer id);
 
   /**
    * 受講生のコース情報の全件検索を行います。
    *
-   * @return　受講生のコース情報（全件）
+   * @return 受講生のコース情報（全件）
    */
   List<StudentCourse> searchStudentCourseList();
 

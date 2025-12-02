@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
-import reisetech.studentmanagement.date.Student;
-import reisetech.studentmanagement.date.StudentCourse;
+import reisetech.studentmanagement.data.Student;
+import reisetech.studentmanagement.data.StudentCourse;
 import reisetech.studentmanagement.domain.StudentDetail;
 
 /**
@@ -19,7 +19,7 @@ public class StudentConverter {
    *
    * @param studentList       　受講生一覧
    * @param studentCourseList 　受講生コース情報
-   * @return　受講生詳細情報のリスト
+   * @return 受講生詳細情報のリスト
    */
   public List<StudentDetail> convertStudentDetailList(List<Student> studentList,
       List<StudentCourse> studentCourseList) {
