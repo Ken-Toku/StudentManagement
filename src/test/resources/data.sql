@@ -19,3 +19,10 @@ VALUES
 
   ALTER TABLE students ALTER COLUMN id RESTART WITH 100;
   ALTER TABLE students_courses ALTER COLUMN id RESTART WITH 100;
+
+  INSERT INTO student_course_status (student_course_id, status)
+  VALUES
+  (1, '仮申込'),
+  (2, '本申込'),
+  (3, '受講中'),
+  (4, '受講終了');
