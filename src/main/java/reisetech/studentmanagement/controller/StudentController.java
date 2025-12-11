@@ -42,10 +42,7 @@ public class StudentController {
    *
    * @return　受講生詳細一覧（全件）
    */
-  @Operation(
-      summary = "受講生一覧の取得",
-      description = "登録済みの受講生情報を全件取得します。条件指定はありません。"
-  )
+  @Operation(summary = "受講生一覧の取得", description = "登録済みの受講生情報を全件取得します。条件指定はありません。")
   @GetMapping("/studentList")
   public List<StudentDetail> getStudentList() {
     return service.searchStudentList();
@@ -57,17 +54,12 @@ public class StudentController {
    * @param  　id　受講生ID
    * @return　受講生情報
    */
-  @Operation(
-      summary = "受講生詳細の取得",
-      description = "受講生IDを指定して、該当する受講生の詳細情報を１件取得します。"
+  @Operation(summary = "受講生詳細の取得", description = "受講生IDを指定して、該当する受講生の詳細情報を１件取得します。"
 
   )
   @GetMapping("/student/{id}")
   public StudentDetail getStudent(
-      @Parameter(description = "受講生ＩＤ（1～999の整数）")
-      @PathVariable
-      @Min(value = 1, message = "IDは1以上の数値を指定してください")
-      @Max(value = 999, message = "IDは3桁までの数値を指定してください") Integer id) {
+      @Parameter(description = "受講生ＩＤ（1～999の整数）") @PathVariable @Min(value = 1, message = "IDは1以上の数値を指定してください") @Max(value = 999, message = "IDは3桁までの数値を指定してください") Integer id) {
     return service.searchStudent(id);
   }
 
@@ -77,10 +69,7 @@ public class StudentController {
    * @param ? 　studentDetailもしくはbindingResult
    * @return　実行結果
    */
-  @Operation(
-      summary = "受講生の新規登録",
-      description = "受講生詳細情報（StudentDetailを受け取り、新規に登録します。"
-  )
+  @Operation(summary = "受講生の新規登録", description = "受講生詳細情報（StudentDetailを受け取り、新規に登録します。")
   @PostMapping("/registerStudent")
   public ResponseEntity<?> registerStudent(@RequestBody @Valid StudentDetail studentDetail) {
 
@@ -94,10 +83,7 @@ public class StudentController {
    * @param ? studentDetailかbindingResult
    * @return　実行結果
    */
-  @Operation(
-      summary = "受講生情報の更新",
-      description = "既存の受講生情報を更新します。キャンセルフラグの更新（論理削除）も含みます。"
-  )
+  @Operation(summary = "受講生情報の更新", description = "既存の受講生情報を更新します。キャンセルフラグの更新（論理削除）も含みます。")
   @PutMapping("/updateStudent")
   public ResponseEntity<?> updateStudent(@RequestBody @Valid StudentDetail studentDetail) {
 

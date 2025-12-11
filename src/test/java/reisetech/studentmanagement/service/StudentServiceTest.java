@@ -33,11 +33,14 @@ public class StudentServiceTest {
   @Mock
   private StudentConverter converter;
 
+  @Mock
+  private StudentCourseStatusService courseStatusService;
+
   private StudentService sut;
 
   @BeforeEach
   void before() {
-    sut = new StudentService(repository, converter);
+    sut = new StudentService(repository, converter, courseStatusService);
   }
 
 

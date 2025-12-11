@@ -21,14 +21,21 @@ import reisetech.studentmanagement.repository.StudentRepository;
 @Service
 public class StudentService {
 
-  private StudentRepository repository;
-  private StudentConverter converter;
+  private final StudentRepository repository;
+  private final StudentConverter converter;
+  private final StudentCourseStatusService studentCourseStatusService;
 
   @Autowired
-  public StudentService(StudentRepository repository, StudentConverter converter) {
+  public StudentService(
+      StudentRepository repository,
+      StudentConverter converter,
+      StudentCourseStatusService studentCourseStatusService) {
     this.repository = repository;
     this.converter = converter;
+    this.studentCourseStatusService = studentCourseStatusService;
+
   }
+
 
   /**
    * 受講生詳細の一覧検索を行います。 全件検索を行うので、条件指定は行いません。
@@ -54,19 +61,23 @@ public class StudentService {
   }
 
   /**
-   * 受講生詳細の登録を行います。 受講生と受講生コース情報を個別に登録し、受講生コース情報には受講生情報を紐づける値とコース終了日を設定します。
-   *
-   * @param studentDetail　受講生詳細
-   * @return 登録情報を付与した受講生詳細
+   * 受講生詳細の登録を行います。
+   * 受講生と受講生コース情報を個別に登録し、
+   * 受講生コース情報には受講生IDとコース終了日を設定します。
+   * さらに、各受講生コースに紐づく申込状態を「仮申込」として初期登録します。
    */
+
   @Transactional
   public StudentDetail registerStudent(StudentDetail studentDetail) {
     Student student = studentDetail.getStudent();
 
     repository.registerStudent(student);
+
     studentDetail.getStudentCourseList().forEach(studentCourse -> {
       initStudentCourse(studentCourse, student.getId());
       repository.registerStudentCourse(studentCourse);
+      Integer studentCourseId = studentCourse.getId();
+      studentCourseStatusService.registerInitStatus(studentCourseId);
     });
 
     return studentDetail;
@@ -76,7 +87,7 @@ public class StudentService {
    * 受講生コース情報を登録する際の初期情報を設定する。
    *
    * @param studentCourse 　受講生コース情報
-   * @param id       　受講生ID
+   * @param id            　受講生ID
    */
   static void initStudentCourse(StudentCourse studentCourse, Integer id) {
     studentCourse.setStudentId(id);
