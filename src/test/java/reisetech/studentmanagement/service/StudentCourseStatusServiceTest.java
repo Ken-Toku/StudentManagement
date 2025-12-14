@@ -22,13 +22,13 @@ import reisetech.studentmanagement.repository.StudentCourseStatusRepository;
 public class StudentCourseStatusServiceTest {
 
   @Mock
-  private StudentCourseStatusRepository repository;
+  private StudentCourseStatusRepository statusRepository;
 
   private StudentCourseStatusService sut;
 
   @BeforeEach
   void before() {
-    sut = new StudentCourseStatusService(repository);
+    sut = new StudentCourseStatusService(statusRepository);
   }
 
   @Test
@@ -39,11 +39,11 @@ public class StudentCourseStatusServiceTest {
     courseStatus.setStudentCourseId(1);
     courseStatus.setStatus("仮申込");
 
-    Mockito.when(repository.searchStudentCourseId(1)).thenReturn(courseStatus);
+    Mockito.when(statusRepository.searchStudentCourseId(1)).thenReturn(courseStatus);
 
     StudentCourseStatus actual = sut.searchStudentCourseId(1);
 
-    verify(repository, times(1)).searchStudentCourseId(1);
+    verify(statusRepository, times(1)).searchStudentCourseId(1);
 
     assertThat(actual.getId()).isEqualTo(100);
     assertThat(actual.getStudentCourseId()).isEqualTo(1);
@@ -58,15 +58,15 @@ public class StudentCourseStatusServiceTest {
     current.setStudentCourseId(1);
     current.setStatus("仮申込");
 
-    Mockito.when(repository.searchStudentCourseId(1)).thenReturn(current);
+    Mockito.when(statusRepository.searchStudentCourseId(1)).thenReturn(current);
 
     sut.updateStatus(1, "本申込");
 
-    verify(repository, times(1)).searchStudentCourseId(1);
+    verify(statusRepository, times(1)).searchStudentCourseId(1);
 
     ArgumentCaptor<StudentCourseStatus> captor = ArgumentCaptor.forClass(StudentCourseStatus.class);
 
-    verify(repository, times(1)).updateStudentCourseStatus(captor.capture());
+    verify(statusRepository, times(1)).updateStudentCourseStatus(captor.capture());
 
     StudentCourseStatus update = captor.getValue();
     assertThat(update.getId()).isEqualTo(10);
@@ -77,14 +77,30 @@ public class StudentCourseStatusServiceTest {
 
   @Test
   void ステータスを更新_存在しないIDを更新したときに例外が発生すること() {
-    Mockito.when(repository.searchStudentCourseId(1)).thenReturn(null);
+    Mockito.when(statusRepository.searchStudentCourseId(1)).thenReturn(null);
 
     assertThatThrownBy(() -> sut.updateStatus(1, "本申込")).isInstanceOf(
         IllegalArgumentException.class);
 
-    verify(repository, times(1)).searchStudentCourseId(1);
-    verify(repository, never()).updateStudentCourseStatus(any(StudentCourseStatus.class));
+    verify(statusRepository, times(1)).searchStudentCourseId(1);
+    verify(statusRepository, never()).updateStudentCourseStatus(any(StudentCourseStatus.class));
 
+  }
+
+  @Test
+  void ステータスを更新_存在しないステータスを更新したときに例外が発生すること() {
+    StudentCourseStatus current = new StudentCourseStatus();
+    current.setId(1);
+    current.setStudentCourseId(1);
+    current.setStatus("仮申込");
+
+    Mockito.when(statusRepository.searchStudentCourseId(1)).thenReturn(current);
+
+    assertThatThrownBy(() -> sut.updateStatus(1, "申込済（テスト）"))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("ステータスの値が不正です:申込済（テスト）");
+
+    verify(statusRepository, never()).updateStudentCourseStatus(any());
   }
 
   @Test
@@ -93,7 +109,7 @@ public class StudentCourseStatusServiceTest {
 
     ArgumentCaptor<StudentCourseStatus> captor = ArgumentCaptor.forClass(StudentCourseStatus.class);
 
-    verify(repository, times(1)).registerStudentCourseStatus(captor.capture());
+    verify(statusRepository, times(1)).registerStudentCourseStatus(captor.capture());
 
     StudentCourseStatus saved = captor.getValue();
     assertThat(saved.getStudentCourseId()).isEqualTo(1);

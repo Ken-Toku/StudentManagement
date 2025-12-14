@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import reisetech.studentmanagement.controller.converter.StudentConverter;
 import reisetech.studentmanagement.data.Student;
 import reisetech.studentmanagement.data.StudentCourse;
+import reisetech.studentmanagement.data.StudentCourseStatus;
 import reisetech.studentmanagement.domain.StudentDetail;
 import reisetech.studentmanagement.repository.StudentRepository;
 
@@ -45,6 +46,7 @@ public class StudentService {
   public List<StudentDetail> searchStudentList() {
     List<Student> studentList = repository.search();
     List<StudentCourse> studentCourseList = repository.searchStudentCourseList();
+    setStatusForCourses(studentCourseList);
     return converter.convertStudentDetailList(studentList, studentCourseList);
   }
 
@@ -56,14 +58,32 @@ public class StudentService {
    */
   public StudentDetail searchStudent(Integer id) {
     Student student = repository.searchStudent(id);
-    List<StudentCourse> studentCourse = repository.searchStudentCourse(student.getId());
-    return new StudentDetail(student, studentCourse);
+    List<StudentCourse> studentCourseList = repository.searchStudentCourse(student.getId());
+    setStatusForCourses(studentCourseList);
+    return new StudentDetail(student, studentCourseList);
   }
 
   /**
-   * 受講生詳細の登録を行います。
-   * 受講生と受講生コース情報を個別に登録し、
-   * 受講生コース情報には受講生IDとコース終了日を設定します。
+   * 受講生コース情報（List<StudentCourse>）にステータスを紐づける共通メソッド。
+   *
+   * ・各 StudentCourse の id をキーにステータスを検索
+   * ・見つかったステータスを Course.status にセット
+   * ・未登録の場合は何もセットしない（null のまま）
+   */
+
+  private void setStatusForCourses(List<StudentCourse> studentCourseList) {
+    studentCourseList.forEach(course -> {
+      StudentCourseStatus status =
+          studentCourseStatusService.searchStudentCourseId((course.getId()));
+      if (status != null) {
+        course.setStatus(status.getStatus());
+      }
+    });
+  }
+
+
+  /**
+   * 受講生詳細の登録を行います。 受講生と受講生コース情報を個別に登録し、 受講生コース情報には受講生IDとコース終了日を設定します。
    * さらに、各受講生コースに紐づく申込状態を「仮申込」として初期登録します。
    */
 

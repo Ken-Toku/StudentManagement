@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import reisetech.studentmanagement.data.StudentCourseStatus;
 import reisetech.studentmanagement.domain.StudentDetail;
+import reisetech.studentmanagement.service.StudentCourseStatusService;
 import reisetech.studentmanagement.service.StudentService;
 
 /**
@@ -29,12 +31,14 @@ import reisetech.studentmanagement.service.StudentService;
 public class StudentController {
 
   private StudentService service;
+  private StudentCourseStatusService statusService;
 
 
   @Autowired
-  public StudentController(StudentService service) {
+  public StudentController(StudentService service, StudentCourseStatusService statusService) {
 
     this.service = service;
+    this.statusService = statusService;
   }
 
   /**
@@ -95,9 +99,23 @@ public class StudentController {
   public ResponseEntity<String> throwException() throws NotFoundException {
     throw new NotFoundException("このAPIは現在利用できません。古いURLとなっています。");
   }
-
+  
   @ExceptionHandler(NotFoundException.class)
   public ResponseEntity<String> handleNotFoundException(NotFoundException ex) {
     return ResponseEntity.badRequest().body(ex.getMessage());
+  }
+
+  /**
+   * コースステータスの更新を行います。
+   *
+   * @param courseStatus コースIDとステータス
+   * @return　実行結果メッセージ
+   */
+  @Operation(summary = "コースステータスの更新", description = "受講生コース情報のステータスの更新します。")
+  @PutMapping("/updateCourseStatus")
+  public ResponseEntity<?> updateCourseStatus(@RequestBody StudentCourseStatus courseStatus) {
+    statusService.updateStatus(courseStatus.getStudentCourseId(), courseStatus.getStatus());
+
+    return ResponseEntity.ok("ステータスの更新処理が成功しました。");
   }
 }

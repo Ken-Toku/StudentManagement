@@ -22,9 +22,9 @@ public interface StudentCourseStatusRepository {
    */
   @Select("""
       SELECT
-      　id,
-      　student_course_id,
-      　status
+        id,
+        student_course_id,
+        status
       FROM student_course_status
       WHERE student_course_id = #{studentCourseId}
       """)
@@ -35,12 +35,12 @@ public interface StudentCourseStatusRepository {
    */
   @Insert("""
       INSERT INTO student_course_status(
-      　student_course_id,
-      　status
+        student_course_id,
+        status
       )
       VALUES(
-      　#{studentCourseId},
-      　#{status}
+        #{studentCourseId},
+        #{status}
       )
       """)
   @Options(useGeneratedKeys = true, keyProperty = "id")
