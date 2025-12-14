@@ -20,3 +20,10 @@ CREATE TABLE IF NOT EXISTS students_courses (
   remark VARCHAR(255),
   isDeleted INT
 );
+
+CREATE TABLE IF NOT EXISTS student_course_status (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    student_course_id INT NOT NULL,
+    status VARCHAR(20) NOT NULL COMMENT '仮申込 / 本申込 / 受講中 / 受講終了',
+    UNIQUE (student_course_id)
+);

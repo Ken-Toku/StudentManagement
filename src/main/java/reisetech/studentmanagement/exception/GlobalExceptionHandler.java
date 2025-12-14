@@ -46,10 +46,41 @@ public class GlobalExceptionHandler {
   }
 
   /**
+   * 存在しないリソースにアクセスした場合（404）
+   */
+  @ExceptionHandler(ResourceNotFoundException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public Map<String, Object> handleResourceNotFoundException(
+      ResourceNotFoundException ex,
+      HttpServletRequest request) {
+
+    return buildErrorBody(
+        HttpStatus.NOT_FOUND,
+        ex.getMessage(),
+        request.getRequestURI());
+  }
+
+  /**
+   * リクエストの内容が不正な場合(400) 例：想定外のステータス値等
+   */
+  @ExceptionHandler(IllegalArgumentException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public Map<String, Object> handleIllegalArgumentException(
+      IllegalArgumentException ex,
+      HttpServletRequest request) {
+
+    return buildErrorBody(
+        HttpStatus.BAD_REQUEST,
+        ex.getMessage(),
+        request.getRequestURI());
+  }
+
+  /**
    * RequestBodyの@Valid失敗
    */
   @ExceptionHandler(MethodArgumentNotValidException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
+
   public Map<String, Object> handleMethodArgumentNotValidException(
       MethodArgumentNotValidException ex,
       HttpServletRequest request) {
@@ -77,7 +108,7 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * 　@PathVariable / @RequestParam の制約違反
+   * @PathVariable / @RequestParam の制約違反
    */
   @ExceptionHandler(ConstraintViolationException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)

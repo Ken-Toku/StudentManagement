@@ -21,4 +21,5 @@ public class StudentCourse {
   private LocalDateTime enrollmentDate;
   private LocalDate completionDate;
   private String remark;
+  private String status;
 }
