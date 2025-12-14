@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reisetech.studentmanagement.data.StudentCourseStatus;
+import reisetech.studentmanagement.exception.ResourceNotFoundException;
 import reisetech.studentmanagement.repository.StudentCourseStatusRepository;
 
 @Service
@@ -35,8 +36,8 @@ public class StudentCourseStatusService {
   public void updateStatus(Integer studentCourseId, String newStatus) {
     StudentCourseStatus current = statusRepository.searchStudentCourseId(studentCourseId);
     if (current == null) {
-      throw new IllegalArgumentException(
-          "指定されたコースIDのステータスが存在しません" + studentCourseId);
+      throw new ResourceNotFoundException(
+          "指定されたコースIDのステータスが存在しません。: " + studentCourseId);
     }
 
     if (!STATUS_1.equals(newStatus)

@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reisetech.studentmanagement.data.StudentCourseStatus;
+import reisetech.studentmanagement.exception.ResourceNotFoundException;
 import reisetech.studentmanagement.repository.StudentCourseStatusRepository;
 
 
@@ -79,8 +80,9 @@ public class StudentCourseStatusServiceTest {
   void ステータスを更新_存在しないIDを更新したときに例外が発生すること() {
     Mockito.when(statusRepository.searchStudentCourseId(1)).thenReturn(null);
 
-    assertThatThrownBy(() -> sut.updateStatus(1, "本申込")).isInstanceOf(
-        IllegalArgumentException.class);
+    assertThatThrownBy(() -> sut.updateStatus(1, "本申込"))
+        .isInstanceOf(ResourceNotFoundException.class)
+        .hasMessageContaining("指定されたコースIDのステータスが存在しません。: 1");
 
     verify(statusRepository, times(1)).searchStudentCourseId(1);
     verify(statusRepository, never()).updateStudentCourseStatus(any(StudentCourseStatus.class));

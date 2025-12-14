@@ -12,6 +12,7 @@ import reisetech.studentmanagement.data.Student;
 import reisetech.studentmanagement.data.StudentCourse;
 import reisetech.studentmanagement.data.StudentCourseStatus;
 import reisetech.studentmanagement.domain.StudentDetail;
+import reisetech.studentmanagement.exception.ResourceNotFoundException;
 import reisetech.studentmanagement.repository.StudentRepository;
 
 
@@ -58,6 +59,10 @@ public class StudentService {
    */
   public StudentDetail searchStudent(Integer id) {
     Student student = repository.searchStudent(id);
+    if (student == null){
+      throw new ResourceNotFoundException("指定された受講生IDは存在しません：" + id);
+    }
+
     List<StudentCourse> studentCourseList = repository.searchStudentCourse(student.getId());
     setStatusForCourses(studentCourseList);
     return new StudentDetail(student, studentCourseList);

@@ -3,6 +3,7 @@ package reisetech.studentmanagement.controller;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -28,6 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import reisetech.studentmanagement.data.Student;
 import reisetech.studentmanagement.data.StudentCourse;
 import reisetech.studentmanagement.domain.StudentDetail;
+import reisetech.studentmanagement.exception.ResourceNotFoundException;
 import reisetech.studentmanagement.service.StudentCourseStatusService;
 import reisetech.studentmanagement.service.StudentService;
 
@@ -144,15 +146,6 @@ class StudentControllerTest {
     verify(service, times(1)).updateStudent(any());
   }
 
-
-  @Test
-  void NotFoundExceptionがハンドリングされエラーが返ること() throws Exception {
-    mockMvc.perform(get("/exception"))
-        .andExpect(status().isBadRequest())
-        .andExpect(content().string("このAPIは現在利用できません。古いURLとなっています。"));
-  }
-
-
   @Test
   void 受講生詳細の受講生で適切な値を入力したときに入力チェックに異常が発生しないこと() {
     Student student = new Student();
@@ -252,4 +245,82 @@ class StudentControllerTest {
     verify(statusService, times(1)).updateStatus(1, "本申込");
   }
 
+  @Test
+  void コースステータスの更新でステータスが空文字の場合はバリデーションエラーとなり400が返ること()
+      throws Exception {
+
+    String json = """
+        {
+         "studentCourseId": 1,
+         "status": ""
+        }
+        """;
+
+    mockMvc.perform(put("/updateCourseStatus")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+        .andExpect(status().isBadRequest());
+
+    verify(statusService, never()).updateStatus(anyInt(), any());
+  }
+
+  @Test
+  void コースステータスの更新で受講生コースIDが欠落している場合はバリデーションエラーとなり400が返ること()
+      throws Exception {
+
+    String json = """
+        {
+          "status": "本申込"
+        }
+        """;
+
+    mockMvc.perform(put("/updateCourseStatus")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+        .andExpect(status().isBadRequest());
+
+    verify(statusService, never()).updateStatus(anyInt(), any());
+
+  }
+
+  @Test
+  void コースステータスの更新で不正なステータスの入力は400が返ること() throws Exception {
+
+    doThrow(new IllegalArgumentException("ステータスの値が不正です：キャンセル"))
+        .when(statusService).updateStatus(1, "キャンセル");
+
+    String json = """
+        {
+         "studentCourseId": 1,
+         "status": "キャンセル"
+        }
+        """;
+
+    mockMvc.perform(put("/updateCourseStatus")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+        .andExpect(status().isBadRequest());
+
+    verify(statusService, times(1)).updateStatus(1, "キャンセル");
+  }
+
+  @Test
+  void コースステータスの更新で存在しないコースIDの場合は404が返ること() throws Exception {
+    doThrow(new ResourceNotFoundException("指定されたコースIDのステータスが存在しません：999"))
+        .when(statusService).updateStatus(999, "本申込");
+
+    String json = """
+        {
+         "studentCourseId": 999,
+         "status": "本申込"
+        }
+        """;
+
+    mockMvc.perform(put("/updateCourseStatus")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+        .andExpect(status().isNotFound());
+
+    verify(statusService, times(1)).updateStatus(999, "本申込");
+  }
 }

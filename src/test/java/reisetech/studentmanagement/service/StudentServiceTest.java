@@ -23,6 +23,7 @@ import reisetech.studentmanagement.data.Student;
 import reisetech.studentmanagement.data.StudentCourse;
 import reisetech.studentmanagement.data.StudentCourseStatus;
 import reisetech.studentmanagement.domain.StudentDetail;
+import reisetech.studentmanagement.exception.ResourceNotFoundException;
 import reisetech.studentmanagement.repository.StudentRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -140,12 +141,12 @@ public class StudentServiceTest {
   }
 
   @Test
-  void 受講生IDに紐づく受講生情報を取得＿存在しないIDの場合はNullPointerExceptionが発生すること() {
+  void 受講生IDに紐づく受講生情報を取得＿存在しないIDの場合はResourceNotFoundExceptionが発生すること() {
     Integer notId = 999;
 
     Mockito.when(repository.searchStudent(notId)).thenReturn(null);
 
-    assertThrows(NullPointerException.class, () -> sut.searchStudent(notId));
+    assertThrows(ResourceNotFoundException.class, () -> sut.searchStudent(notId));
 
     verify(repository, never()).searchStudentCourse(anyInt());
   }
