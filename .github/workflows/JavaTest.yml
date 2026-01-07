@@ -53,37 +53,11 @@ jobs:
           username: ${{ env.EC2_USER }}
           key: ${{ secrets.AWS_EC2_PRIVATE_KEY }}
           script: |
+            
+            sudo systemctl enable StudentManagement
+            
             sudo yum update -y
-            
-            if [ -f /etc/systemd/system/StudentManagement.service ]; then
-              echo "already exists Service File"
-            else
-              sudo tee /etc/systemd/system/StudentManagement.service > /dev/null <<'EOL'
-            [Unit]
-            Description=StudentManagement App
-            After=network.target
-            
-            [Service]
-            Type=simple
-            User=ec2-user
-            Group=ec2-user
-            WorkingDirectory=/home/ec2-user
-            
-            ExecStart=/usr/bin/java -jar /home/ec2-user/StudentManagement/app/StudentManagement.jar \
-              --spring.config.additional-location=file:/home/ec2-user/StudentManagement/config/ \
-              --spring.config.name=application-aws
-            
-            Restart=on-failure
-            RestartSec=3
-            SuccessExitStatus=143
-            
-            [Install]
-            WantedBy=multi-user.target
-            EOL
-            fi
-            
-            sudo systemctl daemon-reload
-            
+                        
             if sudo systemctl is-active --quiet StudentManagement; then
               sudo systemctl restart StudentManagement
             else
