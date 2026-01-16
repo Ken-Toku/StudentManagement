@@ -50,7 +50,7 @@ export default function Page() {
 
   const refetch = async () => {
     if (!id) return;
-    const res = await fetch(`${apiBase}/student/${id}`, { cache: "no-store" });
+    const res = await fetch(`/api/student/${id}`, { cache: "no-store" });
     if (!res.ok) throw new Error(`API error: ${res.status} ${res.statusText}`);
     const json = await res.json();
     setData(json);
