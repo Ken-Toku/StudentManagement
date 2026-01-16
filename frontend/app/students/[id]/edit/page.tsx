@@ -66,7 +66,7 @@ export default function StudentEditPage() {
         setLoading(true);
         setLoadError(null);
 
-        const res = await fetch(`${apiBase}/student/${id}`, { cache: "no-store" });
+        const res = await fetch(`/api/student/${id}`, { cache: "no-store" });
         if (!res.ok) throw new Error(`詳細取得に失敗しました (HTTP ${res.status})`);
 
         const data = (await res.json()) as StudentDetail;
@@ -102,7 +102,7 @@ export default function StudentEditPage() {
       setSaving(true);
       setFormError(null);
 
-      const res = await fetch(`${apiBase}/updateStudent`, {
+      const res = await fetch(`/api/updateStudent`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(detail),

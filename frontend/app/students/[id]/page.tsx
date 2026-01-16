@@ -80,11 +80,12 @@ export default function Page() {
   }, [courseList]);
 
   const updateCourseStatus = async (studentCourseId: number, status: StatusType) => {
-    const res = await fetch(`${apiBase}/updateCourseStatus`, {
+    const res = await fetch(`/api/student/update`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ studentCourseId, status }),
     });
+
 
     if (!res.ok) {
       const text = await res.text().catch(() => "");
