@@ -2,8 +2,6 @@
   <img src="docs/images/cover.png" alt="Student Management System">
 </p>
 
-# Student Management System
-
 ## 制作背景
 
 ---
