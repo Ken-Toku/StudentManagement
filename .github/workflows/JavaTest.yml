@@ -3,19 +3,24 @@ name: Java CI with Gradle
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - README.md
+      - docs/**
   pull_request:
     branches: [ "main" ]
 
 env:
-  EC2_USER: 'ec2-user'
+  EC2_USER: ec2-user
   EC2_HOST: ${{ vars.EC2_HOST }}
-  DEST_PATH: '/home/ec2-user/StudentManagement/app/StudentManagement.jar'
+  DEST_PATH: /home/ec2-user/StudentManagement/app/StudentManagement.jar
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout source
+        uses: actions/checkout@v4
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -26,13 +31,14 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582
 
+      # --- CI ---
       - name: Test with Gradle Wrapper
         run: ./gradlew test --stacktrace --warning-mode=all --info
 
       - name: Build with Gradle Wrapper
         run: ./gradlew bootJar
 
-      # --- CD（mainマージ時のみ）---
+      # --- CD（main push かつ README 以外変更時のみ）---
       - name: Prepare known_hosts
         if: github.event_name == 'push'
         run: |
@@ -70,8 +76,6 @@ jobs:
 
             sudo systemctl daemon-reload
             sudo systemctl enable StudentManagement
-
-            sudo yum update -y
 
             if sudo systemctl is-active --quiet StudentManagement; then
               sudo systemctl restart StudentManagement
