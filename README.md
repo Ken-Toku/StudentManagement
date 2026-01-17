@@ -1,9 +1,8 @@
-# Student Management System
-
----
 <p align="center">
-  <img src="docs/images/student-list.png" alt="受講生一覧画面" width="900">
+  <img src="docs/images/cover.png.png" alt="Student Management System">
 </p>
+
+# Student Management System
 
 ## 制作背景
 
@@ -42,6 +41,9 @@ https://student-management-beryl-sigma.vercel.app/students
 UI 設計・データ設計・テスト・CI/CD を含めた  
 アプリケーション開発全体の流れを意識して構築しました。
 
+<p align="center">
+  <img src="docs/images/student-list.png" alt="受講生一覧画面" width="900">
+</p>
 
 
 ## 機能
