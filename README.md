@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/images/cover.png.png" alt="Student Management System">
+  <img src="docs/images/cover.png" alt="Student Management System">
 </p>
 
 # Student Management System
